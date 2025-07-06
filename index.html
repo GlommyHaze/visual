@@ -1,0 +1,56 @@
+<!doctype html>
+
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.5/dist/mindar-image.prod.js"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.5/dist/mindar-image-aframe.prod.js"></script>
+  </head>
+
+  <body>
+    <a-scene
+      mindar-image="imageTargetSrc: assets/target.mind;" 
+      vr-mode-ui="enabled: false" 
+      device-orientation-permission-ui="enabled: false">
+
+      <!-- Definir el video como asset -->
+      <a-assets>
+        <video id="videoAsset" src="assets/Trabajo.mp4" loop playsinline></video>
+      </a-assets>
+
+      <a-camera 
+        position="0 0 0" 
+        look-controls="enabled: false">
+      </a-camera>
+
+      <!-- Entidad que contiene el video -->
+      <a-entity mindar-image-target="targetIndex: 0" id="videoEntity">
+        <a-video 
+          src="#videoAsset" 
+          position="0 0 0.1" 
+          width="1" 
+          height="0.75">
+        </a-video>
+      </a-entity>
+    </a-scene>
+
+    <script>
+      // Referencias al video y al target
+      const video = document.querySelector('#videoAsset');
+      const videoEntity = document.querySelector('#videoEntity');
+
+      // Escuchar eventos del image target
+      videoEntity.addEventListener('targetFound', () => {
+        //console.log('Image target encontrado');
+        video.currentTime = 0; // Reiniciar el video
+        video.play(); // Reproducir el video
+      });
+
+      videoEntity.addEventListener('targetLost', () => {
+        //console.log('Image target perdido');
+        video.pause(); // Detener la reproducción del video
+      });
+    </script>
+  </body>
+</html>
